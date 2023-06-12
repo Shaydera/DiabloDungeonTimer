@@ -1,0 +1,41 @@
+<UserControl x:Class="DiabloDungeonTimer.UI.Views.ZoneTimerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
+             d:DataContext="{d:DesignInstance viewModels:ZoneTimerViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="650">
+    <Grid Margin="6">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <Label Content="{Binding Path=CurrentZoneName}" FontSize="18" HorizontalAlignment="Center"
+                   Margin="0,25,0,0" />
+            <Label Content="{Binding Path=CurrentZoneTime}" FontSize="22" HorizontalAlignment="Center"
+                   Margin="0,20,0,0" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,25,0,0">
+            <DataGrid ItemsSource="{Binding Path=ZoneHistory}" AutoGenerateColumns="False"
+                      Width="500"
+                      CanUserSortColumns="False"
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="150" Width="4*" />
+                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" MinWidth="90" Width="3*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,63 @@
+﻿<mah:MetroWindow x:Class="DiabloDungeonTimer.UI.Views.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+                 xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
+                 xmlns:views="clr-namespace:DiabloDungeonTimer.UI.Views"
+                 d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+                 mc:Ignorable="d"
+                 Title="{Binding DisplayName}" MinHeight="400" MinWidth="400" Height="450" Width="650"
+                 ShowIconOnTitleBar="True"
+                 ResizeMode="CanMinimize">
+    <mah:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  Margin="4,4,0,4"
+                  Background="Transparent"
+                  RenderOptions.EdgeMode="Aliased"
+                  RenderOptions.BitmapScalingMode="HighQuality">
+                <Image Source="/Assets/Icon/icon.ico" />
+            </Grid>
+        </DataTemplate>
+    </mah:MetroWindow.IconTemplate>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:MainWindowViewModel}" />
+        <DataTemplate DataType="{x:Type viewModels:ConfigurationViewModel}">
+            <views:ConfigurationView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ZoneTimerViewModel}">
+            <views:ZoneTimerView />
+        </DataTemplate>
+    </Window.Resources>
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding StartupCommand}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    <DockPanel>
+        <DockPanel KeyboardNavigation.TabNavigation="None" DockPanel.Dock="Top">
+            <Menu KeyboardNavigation.TabNavigation="Cycle" IsMainMenu="True">
+                <MenuItem Header="_File">
+                    <Separator />
+                    <MenuItem Header="E_xit"
+                              IsEnabled="{Binding Path=CloseEnabled}"
+                              Command="{Binding Path=CloseCommand}"
+                              DataContext="{Binding Path=CurrentWorkspace}" />
+                </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="_Options"
+                              Command="{Binding Path=ChangeConfigCommand}" />
+                </MenuItem>
+                <!--<MenuItem Header="_Edit" />-->
+                <!--<MenuItem Header="_Help" />-->
+            </Menu>
+        </DockPanel>
+        <DockPanel>
+            <ContentPresenter Content="{Binding Path=CurrentWorkspace}" />
+        </DockPanel>
+    </DockPanel>
+</mah:MetroWindow>

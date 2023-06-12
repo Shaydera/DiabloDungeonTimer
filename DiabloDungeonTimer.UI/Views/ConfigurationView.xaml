@@ -1,0 +1,43 @@
+<UserControl x:Class="DiabloDungeonTimer.UI.Views.ConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
+             d:DataContext="{d:DesignInstance viewModels:ConfigurationViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="650">
+    <Grid Margin="6" IsEnabled="{Binding Path=InputEnabled}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Column="1" HorizontalAlignment="Center" FontSize="18" Content="Options" />
+        <DockPanel Grid.Column="1" Grid.Row="1" Margin="0,10">
+            <Label Content="Diablo IV Root Directory" HorizontalAlignment="Left" DockPanel.Dock="Top" />
+            <Button DockPanel.Dock="Right" Width="30" Margin="2,0,0,0"
+                    Command="{Binding BrowseGameDirectoryCommand}">
+                <iconPacks:PackIconMaterial Kind="{x:Static iconPacks:PackIconMaterialKind.FolderSettings}" />
+            </Button>
+            <TextBox
+                MinWidth="275"
+                MaxWidth="350"
+                Text="{Binding Path=GameDirectory, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                HorizontalAlignment="Stretch"
+                VerticalContentAlignment="Center" />
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="4" Margin="0,20">
+            <Button Content="Save" MinWidth="100" IsEnabled="{Binding SaveEnabled}"
+                    Command="{Binding SaveCommand}" />
+        </DockPanel>
+    </Grid>
+</UserControl>

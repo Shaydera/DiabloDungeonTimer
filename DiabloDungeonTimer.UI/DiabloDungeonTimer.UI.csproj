@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+        <Platforms>x64</Platforms>
+        <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+        <Product>$(SolutionName)</Product>
+        <Authors>shaydera &lt;shaydera@arkanion.de&gt;</Authors>
+        <UseWindowsForms>true</UseWindowsForms>
+        <Configurations>Debug;Release</Configurations>
+        <ApplicationIcon>Assets\Icon\icon.ico</ApplicationIcon>
+        <AssemblyVersion>0.1.0</AssemblyVersion>
+        <FileVersion>0.1.0</FileVersion>
+        <IsPackable>false</IsPackable>
+        <Version>0.1.0</Version>
+        <Title>DiabloDungeonTimer</Title>
+        <Description>Automic Dungeon Timer for Diablo IV</Description>
+        <PackageIcon>Assets\Icon\icon-512.png</PackageIcon>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0"/>
+        <PackageReference Include="MahApps.Metro" Version="2.4.9"/>
+        <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DiabloDungeonTimer.Core\DiabloDungeonTimer.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Update="Views\ZoneTimerView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Assets\Icon\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Assets\Icon\icon-512.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Assets\Icon\icon.ico"/>
+        <Resource Include="Assets\Icon\icon.ico">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
+
+</Project>
