@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
              d:DataContext="{d:DesignInstance viewModels:ZoneTimerViewModel}"
              mc:Ignorable="d"
@@ -24,18 +25,33 @@
             <Label Content="{Binding Path=CurrentZoneTime}" FontSize="22" HorizontalAlignment="Center"
                    Margin="0,20,0,0" />
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,25,0,0">
+        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,40,0,0" Width="550">
             <DataGrid ItemsSource="{Binding Path=ZoneHistory}" AutoGenerateColumns="False"
-                      Width="500"
                       CanUserSortColumns="False"
                       ScrollViewer.CanContentScroll="True"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible"
-                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      MinHeight="175"
+                      Height="175">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="150" Width="4*" />
                     <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" MinWidth="90" Width="3*" />
                 </DataGrid.Columns>
             </DataGrid>
+            <DockPanel>
+                <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="2,2" Height="30" Command="{Binding ClearHistoryCommand}">
+                    <iconPacks:PackIconMaterial Kind="{x:Static iconPacks:PackIconMaterialKind.TrashCanOutline}"/>
+                </Button>
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ZoneHistory.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+            </DockPanel>
         </StackPanel>
     </Grid>
 </UserControl>

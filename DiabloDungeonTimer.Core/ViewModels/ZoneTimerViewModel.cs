@@ -26,13 +26,15 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
             Interval = TimeSpan.FromMilliseconds(125)
         };
         _refreshTimer.Tick += RefreshTimerOnTick;
+        ZoneHistory = new ObservableCollection<ZoneInfo>();
         StartTimersCommand = new RelayCommand(OnStartTimers);
         StopTimersCommand = new RelayCommand(OnStopTimers);
-        ZoneHistory = new ObservableCollection<ZoneInfo>();
+        ClearHistoryCommand = new RelayCommand(() => ZoneHistory.Clear());
     }
 
     public IRelayCommand StartTimersCommand { get; }
     public IRelayCommand StopTimersCommand { get; }
+    public IRelayCommand ClearHistoryCommand { get; }
 
     public override string Error => _lastError;
 
@@ -60,18 +62,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
     public bool IsMonitoring => _logMonitorService.IsMonitoring();
     public ObservableCollection<ZoneInfo> ZoneHistory { get; }
     public string CurrentZoneName => _currentZone?.Name ?? "Waiting for Zone...";
-
-    public string CurrentZoneTime
-    {
-        get
-        {
-            if (_currentZone == null)
-                return string.Empty;
-            DateTime compareTime = _currentZone.EndTime ?? DateTime.Now;
-            TimeSpan span = compareTime.Subtract(_currentZone.StartTime);
-            return span.ToDisplayString();
-        }
-    }
+    public string CurrentZoneTime => _currentZone == null ? string.Empty : _currentZone.Duration;
 
     private void OnStartTimers()
     {

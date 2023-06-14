@@ -15,8 +15,7 @@ public partial class ZoneInfo
     public string Name { get; }
     public DateTime StartTime { get; }
     public DateTime? EndTime { get; set; }
-
-    public string Duration => EndTime?.Subtract(StartTime).ToDisplayString() ?? TimeSpan.Zero.ToDisplayString();
+    public string Duration => (EndTime ?? DateTime.Now).Subtract(StartTime).ToDisplayString();
 
     public static bool TryParse(LogEntry? logEntry, out ZoneInfo? zoneInfo)
     {
