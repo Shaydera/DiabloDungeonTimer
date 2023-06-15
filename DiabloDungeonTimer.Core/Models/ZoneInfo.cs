@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using DiabloDungeonTimer.Core.Utils;
 
 namespace DiabloDungeonTimer.Core.Models;
 
@@ -15,7 +14,7 @@ public partial class ZoneInfo
     public string Name { get; }
     public DateTime StartTime { get; }
     public DateTime? EndTime { get; set; }
-    public string Duration => (EndTime ?? DateTime.Now).Subtract(StartTime).ToDisplayString();
+    public TimeSpan Duration => (EndTime ?? DateTime.Now).Subtract(StartTime);
 
     public static bool TryParse(LogEntry? logEntry, out ZoneInfo? zoneInfo)
     {

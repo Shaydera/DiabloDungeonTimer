@@ -5,10 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
+             xmlns:utils="clr-namespace:DiabloDungeonTimer.Core.Utils;assembly=DiabloDungeonTimer.Core"
              d:DataContext="{d:DesignInstance viewModels:ZoneTimerViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="650">
     <Grid Margin="6">
+        <Grid.Resources>
+            <utils:TimeSpanDisplayConverter x:Key="TimeSpanDisplayConverter" />
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
@@ -20,10 +24,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label Content="{Binding Path=CurrentZoneName}" FontSize="18" HorizontalAlignment="Center"
+            <Label Content="{Binding Path=CurrentZone.Name, FallbackValue='Waiting for Zone...'}" FontSize="19"
+                   HorizontalAlignment="Center"
                    Margin="0,25,0,0" />
-            <Label Content="{Binding Path=CurrentZoneTime}" FontSize="22" HorizontalAlignment="Center"
-                   Margin="0,20,0,0" />
+            <Label
+                Content="{Binding Path=CurrentZone.Duration, FallbackValue='', Converter={StaticResource TimeSpanDisplayConverter}}"
+                FontSize="22" HorizontalAlignment="Center"
+                Margin="0,20,0,0" />
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,40,0,0" Width="550">
             <DataGrid ItemsSource="{Binding Mode=OneWay,Path=ZoneHistory}" AutoGenerateColumns="False"
@@ -34,14 +41,20 @@
                       MinHeight="175"
                       Height="175">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=Name}" MinWidth="150" Width="10*" />
-                    <DataGridTextColumn Header="Duration" Binding="{Binding Mode=OneWay, Path=Duration}" MinWidth="90" Width="5*" />
-                    <DataGridTextColumn Header="StartTime" Binding="{Binding Mode=OneWay, Path=StartTime, StringFormat='{}{0:HH:mm:ss}'}" MinWidth="90" Width="5*" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=Name}" MinWidth="150"
+                                        Width="10*" />
+                    <DataGridTextColumn Header="Duration"
+                                        Binding="{Binding Mode=OneWay, Path=Duration, Converter={StaticResource TimeSpanDisplayConverter}}"
+                                        MinWidth="90" Width="5*" />
+                    <DataGridTextColumn Header="StartTime"
+                                        Binding="{Binding Mode=OneWay, Path=StartTime, StringFormat='{}{0:HH:mm:ss}'}"
+                                        MinWidth="90" Width="5*" />
                 </DataGrid.Columns>
             </DataGrid>
             <DockPanel>
-                <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="2,2" Height="30" Command="{Binding ClearHistoryCommand}">
-                    <iconPacks:PackIconMaterial Kind="{x:Static iconPacks:PackIconMaterialKind.TrashCanOutline}"/>
+                <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="2,2" Height="30"
+                        Command="{Binding ClearHistoryCommand}">
+                    <iconPacks:PackIconMaterial Kind="{x:Static iconPacks:PackIconMaterialKind.TrashCanOutline}" />
                 </Button>
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">

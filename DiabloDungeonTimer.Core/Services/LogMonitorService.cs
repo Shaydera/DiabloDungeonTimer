@@ -34,6 +34,8 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
         _fileSystemWatcher.Renamed += (_, _) => { _logChanged = false; };
         _fileSystemWatcher.Error += OnFileSystemError;
 
+        //TODO: This is a lazy workaround so we don't have to deal with event invocations from the file system watcher thread.
+        //TODO: Remove this and properly invoke the events from the file system watcher instead.
         _readLogTimer = new DispatcherTimer(DispatcherPriority.Background)
         {
             Interval = TimeSpan.FromSeconds(2)

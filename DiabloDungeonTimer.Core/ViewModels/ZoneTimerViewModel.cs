@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using DiabloDungeonTimer.Core.Enums;
 using DiabloDungeonTimer.Core.Models;
 using DiabloDungeonTimer.Core.Services.Interfaces;
-using DiabloDungeonTimer.Core.Utils;
 
 namespace DiabloDungeonTimer.Core.ViewModels;
 
@@ -29,7 +28,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
         ZoneHistory = new ObservableCollection<ZoneInfo>();
         StartTimersCommand = new RelayCommand(OnStartTimers);
         StopTimersCommand = new RelayCommand(OnStopTimers);
-        ClearHistoryCommand = new RelayCommand(() => ZoneHistory.Clear());
+        ClearHistoryCommand = new RelayCommand(OnClearHistory);
     }
 
     public IRelayCommand StartTimersCommand { get; }
@@ -46,9 +45,9 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
 
             switch (columnName)
             {
-                case nameof(CurrentZoneName):
+                case nameof(CurrentZone):
                 {
-                    if (_currentZone == null)
+                    if (_currentZone == null || string.IsNullOrEmpty(_currentZone.Name))
                         result = "Unknown Zone";
                     break;
                 }
@@ -61,8 +60,12 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
 
     public bool IsMonitoring => _logMonitorService.IsMonitoring();
     public ObservableCollection<ZoneInfo> ZoneHistory { get; }
-    public string CurrentZoneName => _currentZone?.Name ?? "Waiting for Zone...";
-    public string CurrentZoneTime => _currentZone == null ? string.Empty : _currentZone.Duration;
+
+    public ZoneInfo? CurrentZone
+    {
+        get => _currentZone;
+        set => SetProperty(ref _currentZone, value);
+    }
 
     private void OnStartTimers()
     {
@@ -78,9 +81,16 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
         OnPropertyChanged(nameof(IsMonitoring));
     }
 
+    private void OnClearHistory()
+    {
+        ZoneHistory.Clear();
+        if (_currentZone is { EndTime: not null }) 
+            _currentZone = null;
+    }
+
     private void RefreshTimerOnTick(object? sender, EventArgs e)
     {
-        OnPropertyChanged(nameof(CurrentZoneTime));
+        OnPropertyChanged(nameof(CurrentZone));
     }
 
     private void OnZoneChanged(object? sender, ZoneChangeArgs e)
@@ -89,8 +99,6 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
         {
             case ZoneChangeType.Entered:
                 _currentZone = e.Zone;
-                OnPropertyChanged(nameof(CurrentZoneName));
-                OnPropertyChanged(nameof(CurrentZoneTime));
                 break;
             case ZoneChangeType.Exited:
                 ZoneHistory.Insert(0, e.Zone);
