@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Threading;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DiabloDungeonTimer.Core.Enums;
 using DiabloDungeonTimer.Core.Models;
 using DiabloDungeonTimer.Core.Services.Interfaces;
@@ -11,15 +12,15 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
 {
     private readonly FileSystemWatcher _fileSystemWatcher;
     private readonly DispatcherTimer _readLogTimer;
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingsProvider _settingsProvider;
     private ZoneInfo? _currentZoneInfo;
 
     private bool _logChanged;
 
 
-    public LogMonitorService(ISettingsService settingsService)
+    public LogMonitorService(ISettingsProvider? settingsProvider = null)
     {
-        _settingsService = settingsService;
+        _settingsProvider = settingsProvider ?? Ioc.Default.GetRequiredService<ISettingsProvider>();
         _fileSystemWatcher = new FileSystemWatcher
         {
             EnableRaisingEvents = false,
@@ -51,9 +52,9 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
     public bool StartMonitor()
     {
         StopMonitor();
-        if (!_settingsService.IsValid())
+        if (!_settingsProvider.IsValid())
             return false;
-        _fileSystemWatcher.Path = _settingsService.Settings.GameDirectory;
+        _fileSystemWatcher.Path = _settingsProvider.Settings.GameDirectory;
         _fileSystemWatcher.EnableRaisingEvents = true;
         _readLogTimer.Start();
         return true;
@@ -80,7 +81,7 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
         _logChanged = false;
         try
         {
-            string lastZoneLine = File.ReadLines(_settingsService.Settings.GameDirectory + "\\FenrisDebug.txt")
+            string lastZoneLine = File.ReadLines(_settingsProvider.Settings.GameDirectory + "\\FenrisDebug.txt")
                 .Last(line => line.Contains("[Game] Client entered world"));
             if (!LogEntry.TryParse(lastZoneLine, out LogEntry? logEntry))
                 return;
@@ -112,7 +113,7 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
     {
         if (e.ChangeType != WatcherChangeTypes.Changed)
             return;
-        if (!e.FullPath.Equals(_settingsService.Settings.GameDirectory + "\\FenrisDebug.txt"))
+        if (!e.FullPath.Equals(_settingsProvider.Settings.GameDirectory + "\\FenrisDebug.txt"))
             return;
         _logChanged = true;
     }

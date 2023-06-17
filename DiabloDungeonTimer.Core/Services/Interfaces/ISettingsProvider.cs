@@ -7,7 +7,7 @@ namespace DiabloDungeonTimer.Core.Services.Interfaces;
 ///     Services which provide access and storage management for application settings
 /// </summary>
 [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
-public interface ISettingsService
+public interface ISettingsProvider
 {
     public Settings Settings { get; }
     public Task<bool> SaveAsync();

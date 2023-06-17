@@ -6,12 +6,12 @@ using DiabloDungeonTimer.Core.Services.Interfaces;
 
 namespace DiabloDungeonTimer.Core.Services;
 
-public class SettingsService : ISettingsService
+public class SettingsProvider : ISettingsProvider
 {
     private static readonly string FileName = AppDomain.CurrentDomain.BaseDirectory + @"\settings.xml";
     private readonly ISaveFileService _saveFileService;
 
-    public SettingsService(Settings settings, ISaveFileService? saveFileService = null)
+    public SettingsProvider(Settings settings, ISaveFileService? saveFileService = null)
     {
         Settings = settings;
         _saveFileService = saveFileService ?? Ioc.Default.GetRequiredService<ISaveFileService>();

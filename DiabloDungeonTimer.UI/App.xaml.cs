@@ -23,15 +23,16 @@ public partial class App
     private static async Task SetupDependencies()
     {
         var xmlSaveFileService = new XmlSaveFileService();
-        var settingsService = new SettingsService(new Settings(), xmlSaveFileService);
-        await settingsService.ReloadAsync();
+        var settingsProvider = new SettingsProvider(new Settings(), xmlSaveFileService);
+        await settingsProvider.ReloadAsync();
 
         Ioc.Default.ConfigureServices(
             new ServiceCollection()
                 .AddSingleton<ISaveFileService>(xmlSaveFileService)
-                .AddSingleton<ISettingsService>(settingsService)
+                .AddSingleton<ISettingsProvider>(settingsProvider)
                 .AddSingleton<IFileService, WindowsFileService>()
                 .AddSingleton<ILogMonitorService, LogMonitorService>()
+                .AddSingleton<ZoneDataProvider>()
                 .AddSingleton<ZoneTimerViewModel>()
                 .AddTransient<ConfigurationViewModel>()
                 .BuildServiceProvider());
