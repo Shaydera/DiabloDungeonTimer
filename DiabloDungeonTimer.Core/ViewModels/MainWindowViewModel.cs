@@ -16,14 +16,14 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
 {
     private readonly ISettingsService _settingsService;
 
-    public MainWindowViewModel(string displayName, ISettingsService? settingsService = null) : base(displayName)
+    public MainWindowViewModel(ISettingsService? settingsService = null)
     {
         _settingsService = settingsService ?? Ioc.Default.GetRequiredService<ISettingsService>();
         Workspaces = new ObservableCollection<WorkspaceViewModel>();
         Workspaces.CollectionChanged += OnWorkspacesChanged;
         CollectionViewSource.GetDefaultView(Workspaces).CurrentChanging += CurrentWorkspaceChanging;
         CollectionViewSource.GetDefaultView(Workspaces).CurrentChanged += CurrentWorkspaceChanged;
-        StartupCommand = new RelayCommand(OnStartup);
+        StartupCommand = new AsyncRelayCommand(OnStartupAsync);
         ChangeConfigCommand = new RelayCommand(ChangeConfiguration);
     }
 
@@ -39,7 +39,7 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
         }
     }
 
-    public IRelayCommand StartupCommand { get; }
+    public IAsyncRelayCommand StartupCommand { get; }
 
     public IRelayCommand ChangeConfigCommand { get; }
 
@@ -95,20 +95,23 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
             Workspaces.SingleOrDefault(workspace => workspace is ConfigurationViewModel);
         if (configWorkspace == null)
         {
-            configWorkspace = new ConfigurationViewModel("Update Configuration");
+            configWorkspace = Ioc.Default.GetService<ConfigurationViewModel>() ??
+                              new ConfigurationViewModel(_settingsService);
             Workspaces.Add(configWorkspace);
         }
 
         SetActiveWorkspace(configWorkspace);
     }
 
-    private void ShowTimer()
+    private async Task ShowTimer()
     {
         WorkspaceViewModel? timerWorkspace =
             Workspaces.SingleOrDefault(workspace => workspace is ZoneTimerViewModel);
         if (timerWorkspace == null)
         {
-            timerWorkspace = new ZoneTimerViewModel("Timer");
+            timerWorkspace = Ioc.Default.GetService<ZoneTimerViewModel>() ??
+                             new ZoneTimerViewModel(null, _settingsService);
+            await (timerWorkspace as ZoneTimerViewModel)!.LoadHistoryAsync();
             Workspaces.Add(timerWorkspace);
         }
 
@@ -123,9 +126,9 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
         workspaceView?.MoveCurrentTo(workspace);
     }
 
-    private void OnStartup()
+    private async Task OnStartupAsync()
     {
-        ShowTimer();
+        await ShowTimer();
         if (!_settingsService.IsValid())
             ChangeConfiguration();
     }

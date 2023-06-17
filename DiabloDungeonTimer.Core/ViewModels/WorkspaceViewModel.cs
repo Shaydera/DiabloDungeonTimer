@@ -11,7 +11,7 @@ public abstract class WorkspaceViewModel : ViewModelBase, IDataErrorInfo
     private bool _closeEnabled = true;
     private bool _inputEnabled = true;
 
-    protected WorkspaceViewModel(string displayName) : base(displayName)
+    protected WorkspaceViewModel()
     {
         CloseCommand = new RelayCommand(OnRequestClose);
     }

@@ -16,8 +16,8 @@ public sealed class ConfigurationViewModel : WorkspaceViewModel
     private string _lastError = string.Empty;
     private bool _saveEnabled = true;
 
-    public ConfigurationViewModel(string displayName, ISettingsService? settingsService = null,
-        IFileService? fileService = null) : base(displayName)
+    public ConfigurationViewModel(ISettingsService? settingsService = null,
+        IFileService? fileService = null)
     {
         _settingsService = settingsService ?? Ioc.Default.GetRequiredService<ISettingsService>();
         _fileService = fileService ?? Ioc.Default.GetRequiredService<IFileService>();
@@ -53,6 +53,16 @@ public sealed class ConfigurationViewModel : WorkspaceViewModel
     {
         get => _saveEnabled;
         set => SetProperty(ref _saveEnabled, value);
+    }
+
+    public bool KeepHistory
+    {
+        get => _settingsService.Settings.KeepHistory;
+        set
+        {
+            SetProperty(_settingsService.Settings.KeepHistory, value, _settingsService,
+                (service, newValue) => service.Settings.KeepHistory = newValue);
+        }
     }
 
     public override string this[string columnName]

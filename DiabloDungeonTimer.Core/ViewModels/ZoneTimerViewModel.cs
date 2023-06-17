@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
@@ -10,16 +11,23 @@ namespace DiabloDungeonTimer.Core.ViewModels;
 
 public sealed class ZoneTimerViewModel : WorkspaceViewModel
 {
+    private readonly string _historyFilename = Path.Combine(Directory.GetCurrentDirectory(), "ZoneHistory.xml");
+
     private readonly ILogMonitorService _logMonitorService;
     private readonly DispatcherTimer _refreshTimer;
+    private readonly ISaveFileService _saveFileService;
+    private readonly ISettingsService _settingsService;
 
     private ZoneInfo? _currentZone;
     private string _lastError = string.Empty;
 
-    public ZoneTimerViewModel(string displayName, ILogMonitorService? logMonitorService = null) : base(displayName)
+    public ZoneTimerViewModel(ILogMonitorService? logMonitorService = null,
+        ISettingsService? settingsService = null, ISaveFileService? saveFileService = null)
     {
         _logMonitorService = logMonitorService ?? Ioc.Default.GetRequiredService<ILogMonitorService>();
         _logMonitorService.ZoneChange += OnZoneChanged;
+        _settingsService = settingsService ?? Ioc.Default.GetRequiredService<ISettingsService>();
+        _saveFileService = saveFileService ?? Ioc.Default.GetRequiredService<ISaveFileService>();
         _refreshTimer = new DispatcherTimer(DispatcherPriority.Background)
         {
             Interval = TimeSpan.FromMilliseconds(125)
@@ -47,7 +55,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
             {
                 case nameof(CurrentZone):
                 {
-                    if (_currentZone == null || string.IsNullOrEmpty(_currentZone.Name))
+                    if (CurrentZone == null || string.IsNullOrEmpty(CurrentZone.Name))
                         result = "Unknown Zone";
                     break;
                 }
@@ -84,8 +92,8 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
     private void OnClearHistory()
     {
         ZoneHistory.Clear();
-        if (_currentZone is { EndTime: not null }) 
-            _currentZone = null;
+        if (CurrentZone is { EndTime: not null })
+            CurrentZone = null;
     }
 
     private void RefreshTimerOnTick(object? sender, EventArgs e)
@@ -98,7 +106,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
         switch (e.ChangeType)
         {
             case ZoneChangeType.Entered:
-                _currentZone = e.Zone;
+                CurrentZone = e.Zone;
                 break;
             case ZoneChangeType.Exited:
                 ZoneHistory.Insert(0, e.Zone);
@@ -106,5 +114,24 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
             default:
                 throw new NotImplementedException();
         }
+    }
+
+    public async Task LoadHistoryAsync()
+    {
+        if (!_settingsService.Settings.KeepHistory)
+            return;
+        (bool, ObservableCollection<ZoneInfo>?) loadResult =
+            await _saveFileService.TryLoadAsync<ObservableCollection<ZoneInfo>>(_historyFilename);
+        if (loadResult is { Item1: false } || loadResult.Item2 == null)
+            return;
+        ZoneHistory.Clear();
+        foreach (ZoneInfo zoneInfo in loadResult.Item2.OrderBy(info => info.StartTime).Reverse())
+            ZoneHistory.Add(zoneInfo);
+    }
+
+    public async Task SaveHistoryAsync()
+    {
+        if (_settingsService.Settings.KeepHistory)
+            await _saveFileService.SaveAsync(ZoneHistory, _historyFilename);
     }
 }

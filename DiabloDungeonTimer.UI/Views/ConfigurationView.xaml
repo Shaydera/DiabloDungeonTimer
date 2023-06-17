@@ -19,9 +19,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Column="1" HorizontalAlignment="Center" FontSize="18" Content="Options" />
+        <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" FontSize="18" Content="Options" />
         <DockPanel Grid.Column="1" Grid.Row="1" Margin="0,10">
             <Label Content="Diablo IV Root Directory" HorizontalAlignment="Left" DockPanel.Dock="Top" />
             <Button DockPanel.Dock="Right" Width="30" Margin="2,0,0,0"
@@ -35,7 +34,10 @@
                 HorizontalAlignment="Stretch"
                 VerticalContentAlignment="Center" />
         </DockPanel>
-        <DockPanel Grid.Column="1" Grid.Row="4" Margin="0,20">
+        <DockPanel Grid.Column="1" Grid.Row="2">
+            <CheckBox Content="Keep Zone History" IsChecked="{Binding KeepHistory}" />
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="3" Margin="0,20">
             <Button Content="Save" MinWidth="100" IsEnabled="{Binding SaveEnabled}"
                     Command="{Binding SaveCommand}" />
         </DockPanel>

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using DiabloDungeonTimer.Core.Models;
 using DiabloDungeonTimer.Core.Services;
 using DiabloDungeonTimer.Core.Services.Interfaces;
 using DiabloDungeonTimer.Core.ViewModels;
@@ -20,22 +22,36 @@ public partial class App
 
     private static async Task SetupDependencies()
     {
-        var settingsService = await XmlSettingsService.BuildSettingsServiceAsync();
+        var xmlSaveFileService = new XmlSaveFileService();
+        var settingsService = new SettingsService(new Settings(), xmlSaveFileService);
+        await settingsService.ReloadAsync();
+
         Ioc.Default.ConfigureServices(
             new ServiceCollection()
+                .AddSingleton<ISaveFileService>(xmlSaveFileService)
                 .AddSingleton<ISettingsService>(settingsService)
                 .AddSingleton<IFileService, WindowsFileService>()
                 .AddSingleton<ILogMonitorService, LogMonitorService>()
+                .AddSingleton<ZoneTimerViewModel>()
+                .AddTransient<ConfigurationViewModel>()
                 .BuildServiceProvider());
-        await Task.CompletedTask;
     }
 
-    private async void Application_Startup(object sender, StartupEventArgs e)
+    private void Application_Startup(object sender, StartupEventArgs e)
     {
-        await SetupDependencies();
+        Task setupTask = Task.Run(SetupDependencies);
+        for (var i = 0; i < 20; i++)
+        {
+            if (setupTask.IsCompleted)
+                break;
+            Thread.Sleep(100);
+        }
+
+        if (!setupTask.IsCompleted)
+            throw new Exception("Dependency setup timed out.");
         MdiParentWindow = new MainWindow();
         MainWindow = MdiParentWindow;
-        var viewModel = new MainWindowViewModel("Diablo IV Dungeon Timer");
+        var viewModel = new MainWindowViewModel();
         viewModel.RequestClose += MainWindowOnRequestClose;
         MdiParentWindow.DataContext = viewModel;
         MdiParentWindow.Show();
@@ -43,6 +59,9 @@ public partial class App
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
+        var zoneTimerViewModel = Ioc.Default.GetService<ZoneTimerViewModel>();
+        if (zoneTimerViewModel != null)
+            Task.Run(() => zoneTimerViewModel.SaveHistoryAsync()).Wait();
     }
 
     private void MainWindowOnRequestClose(object? sender, EventArgs e)

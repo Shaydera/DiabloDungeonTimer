@@ -1,3 +1,5 @@
+using System.Xml.Serialization;
+
 namespace DiabloDungeonTimer.Core.Models;
 
 /// <summary>
@@ -5,5 +7,6 @@ namespace DiabloDungeonTimer.Core.Models;
 /// </summary>
 public record Settings
 {
-    public string GameDirectory = string.Empty;
+    [XmlElement] public string GameDirectory = string.Empty;
+    [XmlElement] public bool KeepHistory;
 }

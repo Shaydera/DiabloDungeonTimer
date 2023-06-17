@@ -1,19 +1,20 @@
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace DiabloDungeonTimer.Core.Models;
 
-public partial class ZoneInfo
+public partial record ZoneInfo
 {
-    private ZoneInfo(string name, DateTime startTime, DateTime? endTime)
+    private ZoneInfo()
     {
-        Name = name;
-        StartTime = startTime;
-        EndTime = endTime;
+        Name = string.Empty;
+        StartTime = DateTime.MinValue;
+        EndTime = null;
     }
 
-    public string Name { get; }
-    public DateTime StartTime { get; }
-    public DateTime? EndTime { get; set; }
+    [XmlAttribute] public string Name { get; set; }
+    [XmlElement] public DateTime StartTime { get; set; }
+    [XmlElement] public DateTime? EndTime { get; set; }
     public TimeSpan Duration => (EndTime ?? DateTime.Now).Subtract(StartTime);
 
     public static bool TryParse(LogEntry? logEntry, out ZoneInfo? zoneInfo)
@@ -26,7 +27,11 @@ public partial class ZoneInfo
         if (!match.Success)
             return false;
 
-        zoneInfo = new ZoneInfo(match.Groups[1].Value, logEntry.TimeStamp, null);
+        zoneInfo = new ZoneInfo
+        {
+            Name = match.Groups[1].Value,
+            StartTime = logEntry.TimeStamp
+        };
         return true;
     }
 

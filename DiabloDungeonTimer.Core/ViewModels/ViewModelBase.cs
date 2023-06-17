@@ -6,9 +6,8 @@ namespace DiabloDungeonTimer.Core.ViewModels;
 
 public abstract class ViewModelBase : ObservableObject
 {
-    protected ViewModelBase(string displayName)
+    protected ViewModelBase()
     {
-        DisplayName = displayName;
 #if DEBUG
         ThrowOnInvalidPropertyName = true;
         PropertyChanging += (_, args) =>
@@ -23,8 +22,6 @@ public abstract class ViewModelBase : ObservableObject
         };
 #endif
     }
-
-    public string DisplayName { get; }
 
     private bool ThrowOnInvalidPropertyName { get; }
 

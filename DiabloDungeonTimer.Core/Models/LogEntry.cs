@@ -7,7 +7,7 @@ using DiabloDungeonTimer.Core.Utils;
 namespace DiabloDungeonTimer.Core.Models;
 
 [SuppressMessage("ReSharper", "NotAccessedField.Global")]
-public partial class LogEntry
+public partial record LogEntry
 {
     public readonly string Message;
     public LogLevel Level;

@@ -9,7 +9,7 @@
                  xmlns:views="clr-namespace:DiabloDungeonTimer.UI.Views"
                  d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                  mc:Ignorable="d"
-                 Title="{Binding DisplayName}" MinHeight="400" MinWidth="400" Height="450" Width="650"
+                 Title="Diablo IV Dungeon Timer" MinHeight="400" MinWidth="400" Height="450" Width="650"
                  ShowIconOnTitleBar="True"
                  ResizeMode="CanMinimize">
     <mah:MetroWindow.IconTemplate>
