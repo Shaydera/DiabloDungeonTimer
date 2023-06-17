@@ -1,11 +1,11 @@
 using System.Windows.Forms;
-using DiabloDungeonTimer.Core.Services;
+using DiabloDungeonTimer.Core.Services.Interfaces;
 
 namespace DiabloDungeonTimer.UI.Services;
 
-public class WindowsFileService : FileServiceBase
+public class WindowsFileService : IFileService
 {
-    public override string BrowseDirectory(string initialDirectory)
+    public string BrowseDirectory(string initialDirectory)
     {
         var dialog = new FolderBrowserDialog
         {

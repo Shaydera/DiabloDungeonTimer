@@ -5,15 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
-             xmlns:utils="clr-namespace:DiabloDungeonTimer.Core.Utils;assembly=DiabloDungeonTimer.Core"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:DiabloDungeonTimer.UI.Converters"
              d:DataContext="{d:DesignInstance viewModels:ZoneTimerViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="650">
 
     <Grid Margin="6">
         <Grid.Resources>
-            <utils:TimeSpanDisplayConverter x:Key="TimeSpanDisplayConverter" />
+            <converters:TimeSpanDisplayConverter x:Key="TimeSpanDisplayConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

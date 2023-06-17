@@ -1,6 +1,7 @@
 using DiabloDungeonTimer.Core.Enums;
+using DiabloDungeonTimer.Core.Models;
 
-namespace DiabloDungeonTimer.Core.Models;
+namespace DiabloDungeonTimer.Core.Common;
 
 public class ZoneChangeArgs : EventArgs
 {
