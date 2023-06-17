@@ -11,19 +11,19 @@ namespace DiabloDungeonTimer.Core.ViewModels;
 public sealed class ConfigurationViewModel : WorkspaceViewModel
 {
     private readonly IFileService _fileService;
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingsProvider _settingsProvider;
 
     private string _lastError = string.Empty;
     private bool _saveEnabled = true;
 
-    public ConfigurationViewModel(ISettingsService? settingsService = null,
+    public ConfigurationViewModel(ISettingsProvider? settingsProvider = null,
         IFileService? fileService = null)
     {
-        _settingsService = settingsService ?? Ioc.Default.GetRequiredService<ISettingsService>();
+        _settingsProvider = settingsProvider ?? Ioc.Default.GetRequiredService<ISettingsProvider>();
         _fileService = fileService ?? Ioc.Default.GetRequiredService<IFileService>();
         SaveCommand = new AsyncRelayCommand(SaveConfiguration);
         BrowseGameDirectoryCommand = new RelayCommand(BrowseGameDirectory);
-        CloseEnabled = _settingsService.IsValid();
+        CloseEnabled = _settingsProvider.IsValid();
         SaveEnabled = CloseEnabled;
     }
 
@@ -31,16 +31,16 @@ public sealed class ConfigurationViewModel : WorkspaceViewModel
 
     public string GameDirectory
     {
-        get => _settingsService.Settings.GameDirectory;
+        get => _settingsProvider.Settings.GameDirectory;
         set
         {
             value = value.Trim();
             if (string.IsNullOrEmpty(value) || !Directory.Exists(value))
                 return;
 
-            SetProperty(_settingsService.Settings.GameDirectory, value, _settingsService,
+            SetProperty(_settingsProvider.Settings.GameDirectory, value, _settingsProvider,
                 (service, directory) => service.Settings.GameDirectory = directory);
-            SaveEnabled = _settingsService.IsValid();
+            SaveEnabled = _settingsProvider.IsValid();
             CloseEnabled = SaveEnabled;
         }
     }
@@ -57,10 +57,10 @@ public sealed class ConfigurationViewModel : WorkspaceViewModel
 
     public bool KeepHistory
     {
-        get => _settingsService.Settings.KeepHistory;
+        get => _settingsProvider.Settings.KeepHistory;
         set
         {
-            SetProperty(_settingsService.Settings.KeepHistory, value, _settingsService,
+            SetProperty(_settingsProvider.Settings.KeepHistory, value, _settingsProvider,
                 (service, newValue) => service.Settings.KeepHistory = newValue);
         }
     }
@@ -75,7 +75,7 @@ public sealed class ConfigurationViewModel : WorkspaceViewModel
             {
                 case nameof(GameDirectory):
                 {
-                    if (!_settingsService.GameDirectoryValid())
+                    if (!_settingsProvider.GameDirectoryValid())
                         result = "Invalid directory";
                     break;
                 }
@@ -98,7 +98,7 @@ public sealed class ConfigurationViewModel : WorkspaceViewModel
         InputEnabled = false;
         CloseEnabled = false;
         SaveEnabled = false;
-        await _settingsService.SaveAsync();
+        await _settingsProvider.SaveAsync();
         CloseCommand.Execute(null);
     }
 }

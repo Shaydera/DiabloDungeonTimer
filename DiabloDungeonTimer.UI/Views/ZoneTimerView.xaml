@@ -6,9 +6,11 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:viewModels="clr-namespace:DiabloDungeonTimer.Core.ViewModels;assembly=DiabloDungeonTimer.Core"
              xmlns:utils="clr-namespace:DiabloDungeonTimer.Core.Utils;assembly=DiabloDungeonTimer.Core"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              d:DataContext="{d:DesignInstance viewModels:ZoneTimerViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="650">
+
     <Grid Margin="6">
         <Grid.Resources>
             <utils:TimeSpanDisplayConverter x:Key="TimeSpanDisplayConverter" />
@@ -24,33 +26,67 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label Content="{Binding Path=CurrentZone.Name, FallbackValue='Waiting for Zone...'}" FontSize="19"
+            <Label Content="{Binding Path=ZoneData.CurrentZone.Name, FallbackValue='Waiting for Zone...'}"
+                   FontSize="19"
                    HorizontalAlignment="Center"
                    Margin="0,25,0,0" />
             <Label
-                Content="{Binding Path=CurrentZone.Duration, FallbackValue='', Converter={StaticResource TimeSpanDisplayConverter}}"
+                Content="{Binding Path=ZoneData.CurrentZone.Duration, FallbackValue='', Converter={StaticResource TimeSpanDisplayConverter}}"
                 FontSize="22" HorizontalAlignment="Center"
                 Margin="0,20,0,0" />
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,40,0,0" Width="550">
-            <DataGrid ItemsSource="{Binding Mode=OneWay,Path=ZoneHistory}" AutoGenerateColumns="False"
-                      CanUserSortColumns="False"
-                      ScrollViewer.CanContentScroll="True"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                      MinHeight="175"
-                      Height="175">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=Name}" MinWidth="150"
-                                        Width="10*" />
-                    <DataGridTextColumn Header="Duration"
-                                        Binding="{Binding Mode=OneWay, Path=Duration, Converter={StaticResource TimeSpanDisplayConverter}}"
-                                        MinWidth="90" Width="5*" />
-                    <DataGridTextColumn Header="StartTime"
-                                        Binding="{Binding Mode=OneWay, Path=StartTime, StringFormat='{}{0:HH:mm:ss}'}"
-                                        MinWidth="90" Width="5*" />
-                </DataGrid.Columns>
-            </DataGrid>
+        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,20,0,0" Width="550">
+            <TabControl Style="{DynamicResource MahApps.Styles.TabControl.AnimatedSingleRow}"
+                        mah:HeaderedControlHelper.HeaderFontSize="18">
+                <TabItem Header="History">
+                    <DataGrid ItemsSource="{Binding Mode=OneWay,Path=ZoneData.ZoneHistory}" AutoGenerateColumns="False"
+                              CanUserSortColumns="False"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              MinHeight="160"
+                              Height="160">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=Name}" MinWidth="150"
+                                                Width="10*" />
+                            <DataGridTextColumn Header="Duration"
+                                                Binding="{Binding Mode=OneWay, Path=Duration, Converter={StaticResource TimeSpanDisplayConverter}}"
+                                                MinWidth="90" Width="5*" />
+                            <DataGridTextColumn Header="StartTime"
+                                                Binding="{Binding Mode=OneWay, Path=StartTime, StringFormat='{}{0:HH:mm:ss}'}"
+                                                MinWidth="90" Width="5*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Stats">
+                    <DataGrid ItemsSource="{Binding Mode=OneWay,Path=ZoneData.ZoneStatistics}"
+                              AutoGenerateColumns="False"
+                              CanUserSortColumns="False"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              MinHeight="160"
+                              Height="160">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=ZoneName}"
+                                                MinWidth="150"
+                                                Width="8*" />
+                            <DataGridTextColumn Header="Count"
+                                                Binding="{Binding Mode=OneWay, Path=Count}"
+                                                MinWidth="90" Width="3*" />
+                            <DataGridTextColumn Header="Average"
+                                                Binding="{Binding Mode=OneWay, Path=AverageTime, Converter={StaticResource TimeSpanDisplayConverter}}"
+                                                MinWidth="90" Width="3*" />
+                            <DataGridTextColumn Header="Fastest"
+                                                Binding="{Binding Mode=OneWay, Path=FastestTime, Converter={StaticResource TimeSpanDisplayConverter}}"
+                                                MinWidth="90" Width="3*" />
+                            <DataGridTextColumn Header="Slowest"
+                                                Binding="{Binding Mode=OneWay, Path=SlowestTime, Converter={StaticResource TimeSpanDisplayConverter}}"
+                                                MinWidth="90" Width="3*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
             <DockPanel>
                 <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="2,2" Height="30"
                         Command="{Binding ClearHistoryCommand}">
@@ -59,7 +95,7 @@
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ZoneHistory.Count}" Value="0">
+                            <DataTrigger Binding="{Binding ZoneData.ZoneHistory.Count}" Value="0">
                                 <Setter Property="Visibility" Value="Hidden" />
                             </DataTrigger>
                         </Style.Triggers>

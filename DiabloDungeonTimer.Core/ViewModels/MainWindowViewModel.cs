@@ -14,11 +14,11 @@ namespace DiabloDungeonTimer.Core.ViewModels;
 /// </summary>
 public sealed class MainWindowViewModel : WorkspaceViewModel
 {
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingsProvider _settingsProvider;
 
-    public MainWindowViewModel(ISettingsService? settingsService = null)
+    public MainWindowViewModel(ISettingsProvider? settingsProvider = null)
     {
-        _settingsService = settingsService ?? Ioc.Default.GetRequiredService<ISettingsService>();
+        _settingsProvider = settingsProvider ?? Ioc.Default.GetRequiredService<ISettingsProvider>();
         Workspaces = new ObservableCollection<WorkspaceViewModel>();
         Workspaces.CollectionChanged += OnWorkspacesChanged;
         CollectionViewSource.GetDefaultView(Workspaces).CurrentChanging += CurrentWorkspaceChanging;
@@ -51,14 +51,14 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
     {
         e.Cancel = false;
         if (e.IsCancelable && CurrentWorkspace is ConfigurationViewModel)
-            e.Cancel = _settingsService.IsValid();
+            e.Cancel = _settingsProvider.IsValid();
         if (CurrentWorkspace is ZoneTimerViewModel timerVm)
             timerVm.StopTimersCommand.Execute(null);
     }
 
     private void CurrentWorkspaceChanged(object? sender, EventArgs e)
     {
-        if (CurrentWorkspace is ZoneTimerViewModel timerVm && _settingsService.GameDirectoryValid())
+        if (CurrentWorkspace is ZoneTimerViewModel timerVm && _settingsProvider.GameDirectoryValid())
             timerVm.StartTimersCommand.Execute(null);
         OnPropertyChanged(nameof(CurrentWorkspace));
     }
@@ -83,7 +83,7 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
             throw new ArgumentNullException(nameof(sender),
                 $"{nameof(OnWorkspaceRequestClose)}: {nameof(sender)} is null or not a valid {nameof(WorkspaceViewModel)}.");
 
-        if (workspace is ConfigurationViewModel && !_settingsService.IsValid())
+        if (workspace is ConfigurationViewModel && !_settingsProvider.IsValid())
             return;
 
         Workspaces.Remove(workspace);
@@ -96,7 +96,7 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
         if (configWorkspace == null)
         {
             configWorkspace = Ioc.Default.GetService<ConfigurationViewModel>() ??
-                              new ConfigurationViewModel(_settingsService);
+                              new ConfigurationViewModel(_settingsProvider);
             Workspaces.Add(configWorkspace);
         }
 
@@ -110,7 +110,7 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
         if (timerWorkspace == null)
         {
             timerWorkspace = Ioc.Default.GetService<ZoneTimerViewModel>() ??
-                             new ZoneTimerViewModel(null, _settingsService);
+                             new ZoneTimerViewModel(null, null, _settingsProvider);
             await (timerWorkspace as ZoneTimerViewModel)!.LoadHistoryAsync();
             Workspaces.Add(timerWorkspace);
         }
@@ -129,7 +129,7 @@ public sealed class MainWindowViewModel : WorkspaceViewModel
     private async Task OnStartupAsync()
     {
         await ShowTimer();
-        if (!_settingsService.IsValid())
+        if (!_settingsProvider.IsValid())
             ChangeConfiguration();
     }
 }
