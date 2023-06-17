@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiabloDungeonTimer.UI", "DiabloDungeonTimer.UI\DiabloDungeonTimer.UI.csproj", "{7ACD74AF-3640-4B23-AA55-58BCF969AC9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiabloDungeonTimer.UI", "src\DiabloDungeonTimer.UI\DiabloDungeonTimer.UI.csproj", "{7ACD74AF-3640-4B23-AA55-58BCF969AC9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiabloDungeonTimer.Core", "DiabloDungeonTimer.Core\DiabloDungeonTimer.Core.csproj", "{CABFD923-36DA-46A5-80FC-8B6AFE38DDC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiabloDungeonTimer.Core", "src\DiabloDungeonTimer.Core\DiabloDungeonTimer.Core.csproj", "{CABFD923-36DA-46A5-80FC-8B6AFE38DDC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00FE7AB5-A73B-4827-9016-DB0A54AB9B70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{7ACD74AF-3640-4B23-AA55-58BCF969AC9F}.Release|x64.Build.0 = Release|x64
 		{7ACD74AF-3640-4B23-AA55-58BCF969AC9F}.Debug|x64.ActiveCfg = Debug|x64
 		{7ACD74AF-3640-4B23-AA55-58BCF969AC9F}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CABFD923-36DA-46A5-80FC-8B6AFE38DDC4} = {00FE7AB5-A73B-4827-9016-DB0A54AB9B70}
+		{7ACD74AF-3640-4B23-AA55-58BCF969AC9F} = {00FE7AB5-A73B-4827-9016-DB0A54AB9B70}
 	EndGlobalSection
 EndGlobal
