@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="FolderPublish" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" delete_existing_files="true" platform="x64" produce_single_file="true" runtime="win-x64" target_folder="$PROJECT_DIR$/publish" target_framework="net7.0-windows" uuid_high="8848857138731174691" uuid_low="-6172930145579848545" />
+    <method v="2">
+      <option name="CleanSolution" enabled="true" />
+    </method>
+  </configuration>
+</component>
