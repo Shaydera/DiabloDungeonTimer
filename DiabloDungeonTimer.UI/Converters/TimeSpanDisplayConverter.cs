@@ -1,7 +1,9 @@
+using System;
 using System.Globalization;
 using System.Windows.Data;
+using DiabloDungeonTimer.Core.Utils;
 
-namespace DiabloDungeonTimer.Core.Utils;
+namespace DiabloDungeonTimer.UI.Converters;
 
 public class TimeSpanDisplayConverter : IValueConverter
 {

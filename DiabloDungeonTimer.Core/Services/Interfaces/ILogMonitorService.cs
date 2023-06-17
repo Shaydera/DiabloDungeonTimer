@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using DiabloDungeonTimer.Core.Common;
 using DiabloDungeonTimer.Core.Models;
 
 namespace DiabloDungeonTimer.Core.Services.Interfaces;

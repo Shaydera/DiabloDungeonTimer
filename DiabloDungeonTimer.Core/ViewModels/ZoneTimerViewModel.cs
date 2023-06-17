@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using DiabloDungeonTimer.Core.Common;
 using DiabloDungeonTimer.Core.Enums;
 using DiabloDungeonTimer.Core.Models;
 using DiabloDungeonTimer.Core.Services.Interfaces;
