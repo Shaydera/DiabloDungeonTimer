@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-using DiabloDungeonTimer.Core.Models;
 using DiabloDungeonTimer.Core.Services.Interfaces;
 
 namespace DiabloDungeonTimer.Core.Services;
@@ -12,7 +11,9 @@ public class XmlSaveFileService : ISaveFileService
     public async Task<bool> SaveAsync<T>(T saveData, string? fileName = null)
     {
         if (string.IsNullOrEmpty(fileName))
+        {
             fileName = Path.Combine(Directory.GetCurrentDirectory(), $"{typeof(T).Name}.xml");
+        }
         else
         {
             string? directory = Path.GetDirectoryName(fileName);
@@ -21,7 +22,7 @@ public class XmlSaveFileService : ISaveFileService
             if (!Directory.Exists(directory))
                 throw new ArgumentException("Save directory does not exist.", nameof(fileName));
         }
-        
+
         var serializer = new XmlSerializer(typeof(T));
         using var memoryStream = new MemoryStream();
         serializer.Serialize(memoryStream, saveData);

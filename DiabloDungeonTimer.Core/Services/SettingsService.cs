@@ -21,7 +21,7 @@ public class SettingsService : ISettingsService
     {
         return await _saveFileService.SaveAsync(Settings, FileName);
     }
-    
+
     public async Task ReloadAsync()
     {
         (bool, Settings?) loadResult = await _saveFileService.TryLoadAsync<Settings>(FileName);
@@ -30,9 +30,10 @@ public class SettingsService : ISettingsService
             Debug.WriteLine("Failed to load settings file.");
             return;
         }
+
         if (loadResult.Item2 != null)
             Settings = loadResult.Item2;
-        if (!GameDirectoryValid()) 
+        if (!GameDirectoryValid())
             Settings.GameDirectory = string.Empty;
     }
 
