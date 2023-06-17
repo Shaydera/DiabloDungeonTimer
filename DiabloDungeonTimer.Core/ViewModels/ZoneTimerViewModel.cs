@@ -47,7 +47,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
             {
                 case nameof(CurrentZone):
                 {
-                    if (_currentZone == null || string.IsNullOrEmpty(_currentZone.Name))
+                    if (CurrentZone == null || string.IsNullOrEmpty(CurrentZone.Name))
                         result = "Unknown Zone";
                     break;
                 }
@@ -84,8 +84,8 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
     private void OnClearHistory()
     {
         ZoneHistory.Clear();
-        if (_currentZone is { EndTime: not null }) 
-            _currentZone = null;
+        if (CurrentZone is { EndTime: not null }) 
+            CurrentZone = null;
     }
 
     private void RefreshTimerOnTick(object? sender, EventArgs e)
@@ -98,7 +98,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
         switch (e.ChangeType)
         {
             case ZoneChangeType.Entered:
-                _currentZone = e.Zone;
+                CurrentZone = e.Zone;
                 break;
             case ZoneChangeType.Exited:
                 ZoneHistory.Insert(0, e.Zone);

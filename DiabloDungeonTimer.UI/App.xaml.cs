@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using DiabloDungeonTimer.Core.Models;
 using DiabloDungeonTimer.Core.Services;
 using DiabloDungeonTimer.Core.Services.Interfaces;
 using DiabloDungeonTimer.Core.ViewModels;
@@ -20,13 +21,18 @@ public partial class App
 
     private static async Task SetupDependencies()
     {
-        var settingsService = await XmlSettingsService.BuildSettingsServiceAsync();
+        var xmlSaveFileService = new XmlSaveFileService();
+        var settingsService = new SettingsService(new Settings(), xmlSaveFileService);
+        await settingsService.ReloadAsync();
+        
         Ioc.Default.ConfigureServices(
             new ServiceCollection()
+                .AddSingleton<ISaveFileService>(xmlSaveFileService)
                 .AddSingleton<ISettingsService>(settingsService)
                 .AddSingleton<IFileService, WindowsFileService>()
                 .AddSingleton<ILogMonitorService, LogMonitorService>()
                 .BuildServiceProvider());
+        
         await Task.CompletedTask;
     }
 

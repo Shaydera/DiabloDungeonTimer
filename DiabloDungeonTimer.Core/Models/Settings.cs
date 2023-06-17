@@ -6,4 +6,5 @@ namespace DiabloDungeonTimer.Core.Models;
 public record Settings
 {
     public string GameDirectory = string.Empty;
+    public bool KeepHistory = false;
 }
