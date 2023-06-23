@@ -96,8 +96,8 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
                 ZoneChange?.Invoke(this, new ZoneChangeArgs(_currentZoneInfo, ZoneChangeType.Exited));
             }
 
-            if (newZoneInfo.Name.Equals("Limbo") || newZoneInfo.Name.Equals("FrontendStartup") ||
-                newZoneInfo.Name.Equals("Sanctuary_Eastern_Continent"))
+            if (newZoneInfo.Zone.Equals("Limbo") || newZoneInfo.Zone.Equals("FrontendStartup") ||
+                newZoneInfo.Zone.Equals("Sanctuary_Eastern_Continent"))
                 return;
             ZoneChange?.Invoke(this, new ZoneChangeArgs(newZoneInfo, ZoneChangeType.Entered));
             _currentZoneInfo = newZoneInfo;
