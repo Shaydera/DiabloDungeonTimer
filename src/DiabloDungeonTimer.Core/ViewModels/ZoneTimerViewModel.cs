@@ -53,7 +53,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
             {
                 case nameof(ZoneData.CurrentZone):
                 {
-                    if (ZoneData.CurrentZone == null || string.IsNullOrEmpty(ZoneData.CurrentZone.Name))
+                    if (ZoneData.CurrentZone == null || string.IsNullOrEmpty(ZoneData.CurrentZone.Zone))
                         result = "Unknown Zone";
                     break;
                 }
@@ -66,6 +66,8 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
 
     public bool IsMonitoring => _logMonitorService.IsMonitoring();
     public ZoneDataProvider ZoneData { get; }
+
+    public ZoneInfo? CurrentZone => ZoneData.CurrentZone;
 
     private void OnStartTimers()
     {
@@ -90,7 +92,7 @@ public sealed class ZoneTimerViewModel : WorkspaceViewModel
 
     private void RefreshTimerOnTick(object? sender, EventArgs e)
     {
-        OnPropertyChanged(nameof(ZoneData));
+        OnPropertyChanged(nameof(CurrentZone));
     }
 
     public async Task LoadHistoryAsync()

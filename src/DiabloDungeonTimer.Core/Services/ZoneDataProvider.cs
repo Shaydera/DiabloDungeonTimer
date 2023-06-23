@@ -46,9 +46,9 @@ public class ZoneDataProvider : ObservableObject
 
     private void OnZoneAdded(ZoneInfo zoneInfo)
     {
-        if (!ZoneStatistics.Any(x => x.ZoneName.Equals(zoneInfo.Name)))
-            ZoneStatistics.Add(new ZoneStatistic(zoneInfo.Name));
-        ZoneStatistic zoneStatistic = ZoneStatistics.Single(x => x.ZoneName.Equals(zoneInfo.Name));
+        if (!ZoneStatistics.Any(x => x.Zone.Equals(zoneInfo.Zone)))
+            ZoneStatistics.Add(new ZoneStatistic(zoneInfo.Zone));
+        ZoneStatistic zoneStatistic = ZoneStatistics.Single(x => x.Zone.Equals(zoneInfo.Zone));
         zoneStatistic.Count++;
         if (zoneStatistic.FastestTime == TimeSpan.Zero || zoneInfo.Duration < zoneStatistic.FastestTime)
             zoneStatistic.FastestTime = zoneInfo.Duration;

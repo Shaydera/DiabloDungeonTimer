@@ -4,7 +4,7 @@ namespace DiabloDungeonTimer.Core.Models;
 
 public class ZoneStatistic : ObservableObject
 {
-    private readonly string _zoneName;
+    private readonly string _zone;
     private TimeSpan _averageTime = TimeSpan.Zero;
     private int _count;
     private TimeSpan _fastestTime = TimeSpan.Zero;
@@ -12,10 +12,10 @@ public class ZoneStatistic : ObservableObject
 
     public ZoneStatistic(string zoneName)
     {
-        SetProperty(ref _zoneName, zoneName);
+        SetProperty(ref _zone, zoneName);
     }
 
-    public string ZoneName => _zoneName;
+    public string Zone => _zone;
 
     public int Count
     {

@@ -14,6 +14,7 @@
     <Grid Margin="6">
         <Grid.Resources>
             <converters:TimeSpanDisplayConverter x:Key="TimeSpanDisplayConverter" />
+            <converters:ZoneNameConverter x:Key="ZoneNameConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -26,12 +27,12 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label Content="{Binding Path=ZoneData.CurrentZone.Name, FallbackValue='Waiting for Zone...'}"
+            <Label Content="{Binding Path=CurrentZone.Zone, Converter={StaticResource ZoneNameConverter}, FallbackValue='Waiting for Zone...'}"
                    FontSize="19"
                    HorizontalAlignment="Center"
                    Margin="0,25,0,0" />
             <Label
-                Content="{Binding Path=ZoneData.CurrentZone.Duration, FallbackValue='', Converter={StaticResource TimeSpanDisplayConverter}}"
+                Content="{Binding Path=CurrentZone.Duration, FallbackValue='', Converter={StaticResource TimeSpanDisplayConverter}}"
                 FontSize="22" HorizontalAlignment="Center"
                 Margin="0,20,0,0" />
         </StackPanel>
@@ -47,7 +48,7 @@
                               MinHeight="160"
                               Height="160">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=Name}" MinWidth="150"
+                            <DataGridTextColumn Header="Zone" Binding="{Binding Mode=OneWay, Path=Zone, Converter={StaticResource ZoneNameConverter}}" MinWidth="150"
                                                 Width="10*" />
                             <DataGridTextColumn Header="Duration"
                                                 Binding="{Binding Mode=OneWay, Path=Duration, Converter={StaticResource TimeSpanDisplayConverter}}"
@@ -68,7 +69,7 @@
                               MinHeight="160"
                               Height="160">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Mode=OneWay, Path=ZoneName}"
+                            <DataGridTextColumn Header="Zone" Binding="{Binding Mode=OneWay, Path=Zone, Converter={StaticResource ZoneNameConverter}}"
                                                 MinWidth="150"
                                                 Width="8*" />
                             <DataGridTextColumn Header="Count"
