@@ -12,10 +12,13 @@ namespace DiabloDungeonTimer.Core.Services;
 public sealed class LogMonitorService : ILogMonitorService, IDisposable
 {
     private readonly FileSystemWatcher _fileSystemWatcher;
+
+    private readonly HashSet<string> _ignoredZones = new()
+        { "Limbo", "FrontendStartup", "Sanctuary_Eastern_Continent" };
+
     private readonly DispatcherTimer _readLogTimer;
     private readonly ISettingsProvider _settingsProvider;
     private ZoneInfo? _currentZoneInfo;
-
     private bool _logChanged;
 
 
@@ -84,20 +87,19 @@ public sealed class LogMonitorService : ILogMonitorService, IDisposable
         {
             string lastZoneLine = File.ReadLines(_settingsProvider.Settings.GameDirectory + "\\FenrisDebug.txt")
                 .Last(line => line.Contains("[Game] Client entered world"));
-            if (!LogEntry.TryParse(lastZoneLine, out LogEntry? logEntry))
+            if (!LogEntry.TryParse(lastZoneLine, out LogEntry? logEntry) || logEntry == null)
                 return;
-            if (logEntry != null && _currentZoneInfo != null && _currentZoneInfo.StartTime.Equals(logEntry.TimeStamp))
+            if (_currentZoneInfo != null && _currentZoneInfo.StartTime.Equals(logEntry.TimeStamp))
                 return;
             if (!ZoneInfo.TryParse(logEntry, out ZoneInfo? newZoneInfo) || newZoneInfo == null)
                 return;
-            if (_currentZoneInfo is { EndTime: null })
+            if (_currentZoneInfo is { Finished: false })
             {
                 _currentZoneInfo.EndTime = newZoneInfo.StartTime;
                 ZoneChange?.Invoke(this, new ZoneChangeArgs(_currentZoneInfo, ZoneChangeType.Exited));
             }
 
-            if (newZoneInfo.Zone.Equals("Limbo") || newZoneInfo.Zone.Equals("FrontendStartup") ||
-                newZoneInfo.Zone.Equals("Sanctuary_Eastern_Continent"))
+            if (_ignoredZones.Contains(newZoneInfo.Zone))
                 return;
             ZoneChange?.Invoke(this, new ZoneChangeArgs(newZoneInfo, ZoneChangeType.Entered));
             _currentZoneInfo = newZoneInfo;

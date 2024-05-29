@@ -25,7 +25,7 @@ public partial class ZoneNameConverter : IValueConverter
 
     [GeneratedRegex(@"^([A-Za-z0-9]+_){1,2}(\w+$)")]
     private static partial Regex ZoneNameRegex();
-    
+
     [GeneratedRegex(@"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])")]
     private static partial Regex CamelCaseRegex();
 }

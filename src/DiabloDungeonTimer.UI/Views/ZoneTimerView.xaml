@@ -27,10 +27,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label Content="{Binding Path=CurrentZone.Zone, Converter={StaticResource ZoneNameConverter}, FallbackValue='Waiting for Zone...'}"
-                   FontSize="19"
-                   HorizontalAlignment="Center"
-                   Margin="0,25,0,0" />
+            <Label
+                Content="{Binding Path=CurrentZone.Zone, Converter={StaticResource ZoneNameConverter}, FallbackValue='Waiting for Zone...'}"
+                FontSize="19"
+                HorizontalAlignment="Center"
+                Margin="0,25,0,0" />
             <Label
                 Content="{Binding Path=CurrentZone.Duration, FallbackValue='', Converter={StaticResource TimeSpanDisplayConverter}}"
                 FontSize="22" HorizontalAlignment="Center"
@@ -48,7 +49,9 @@
                               MinHeight="160"
                               Height="160">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Zone" Binding="{Binding Mode=OneWay, Path=Zone, Converter={StaticResource ZoneNameConverter}}" MinWidth="150"
+                            <DataGridTextColumn Header="Zone"
+                                                Binding="{Binding Mode=OneWay, Path=Zone, Converter={StaticResource ZoneNameConverter}}"
+                                                MinWidth="150"
                                                 Width="10*" />
                             <DataGridTextColumn Header="Duration"
                                                 Binding="{Binding Mode=OneWay, Path=Duration, Converter={StaticResource TimeSpanDisplayConverter}}"
@@ -69,7 +72,8 @@
                               MinHeight="160"
                               Height="160">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Zone" Binding="{Binding Mode=OneWay, Path=Zone, Converter={StaticResource ZoneNameConverter}}"
+                            <DataGridTextColumn Header="Zone"
+                                                Binding="{Binding Mode=OneWay, Path=Zone, Converter={StaticResource ZoneNameConverter}}"
                                                 MinWidth="150"
                                                 Width="8*" />
                             <DataGridTextColumn Header="Count"

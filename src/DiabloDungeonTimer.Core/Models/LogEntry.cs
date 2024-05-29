@@ -40,7 +40,7 @@ public partial record LogEntry
         return true;
     }
 
-    [GeneratedRegex(@"([A-Z])\s(\d{4}(\.\d{2}){2}\s(\d{2}:){2}\d{2}\.\d{6})\t\[(\w+)\]\s(.+)", RegexOptions.IgnoreCase,
+    [GeneratedRegex(@"([A-Z])\s(\d{4}(\.\d{2}){2}\s(\d{2}:){2}\d{2}\.\d{6})\s?\d*\t\[(\w+)\]\s(.+)", RegexOptions.IgnoreCase,
         "en-US")]
     private static partial Regex LogParseRegex();
 }

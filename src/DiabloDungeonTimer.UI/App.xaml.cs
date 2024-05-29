@@ -41,7 +41,7 @@ public partial class App
     private void Application_Startup(object sender, StartupEventArgs e)
     {
         Task setupTask = Task.Run(SetupDependencies);
-        for (var i = 0; i < 20; i++)
+        for (var i = 0; i < 50; i++)
         {
             if (setupTask.IsCompleted)
                 break;

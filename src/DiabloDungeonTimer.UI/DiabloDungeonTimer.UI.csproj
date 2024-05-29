@@ -21,17 +21,21 @@
         <PackageIcon>Assets\Icon\icon-512.png</PackageIcon>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+        <DefineConstants/>
+    </PropertyGroup>
+
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-        <PackageReference Include="MahApps.Metro" Version="2.4.9" />
-        <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0"/>
+        <PackageReference Include="MahApps.Metro" Version="2.4.9"/>
+        <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DiabloDungeonTimer.Core\DiabloDungeonTimer.Core.csproj" />
+        <ProjectReference Include="..\DiabloDungeonTimer.Core\DiabloDungeonTimer.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -43,7 +47,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Assets\Icon\" />
+        <Folder Include="Assets\Icon\"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -61,7 +65,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Assets\Icon\icon.ico" />
+        <None Remove="Assets\Icon\icon.ico"/>
         <Resource Include="Assets\Icon\icon.ico">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </Resource>

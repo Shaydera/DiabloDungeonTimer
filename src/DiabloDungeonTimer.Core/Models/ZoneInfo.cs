@@ -13,9 +13,14 @@ public partial record ZoneInfo
     }
 
     [XmlAttribute("Name")] public string Zone { get; set; }
+
     [XmlElement] public DateTime StartTime { get; set; }
+
     [XmlElement] public DateTime? EndTime { get; set; }
-    public TimeSpan Duration => (EndTime ?? DateTime.Now).Subtract(StartTime);
+
+    [XmlIgnore] public TimeSpan Duration => (EndTime ?? DateTime.Now).Subtract(StartTime);
+
+    [XmlIgnore] public bool Finished => EndTime.HasValue;
 
     public static bool TryParse(LogEntry? logEntry, out ZoneInfo? zoneInfo)
     {
