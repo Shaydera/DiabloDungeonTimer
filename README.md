@@ -1,3 +1,21 @@
+## Repository Archived
+
+This project, **DiabloDungeonTimer**, has been **archived** and is no longer maintained.
+
+### Why is this archived?
+- After the release of **Diablo 4**, I initially created this tool to track dungeon run times. However, my interest in the game faded quickly, and I have not maintained or updated the tool since.  
+- The tool is **currently not functioning**, and many of the planned features were **never fully implemented**.  
+- Given my lack of engagement with the game and the project, I have decided to **archive the repository** rather than leave it in an incomplete and non-working state.  
+
+### Can I still use it?
+- The repository remains available for reference and forking, but **no support, fixes, or updates will be provided**.  
+- If anyone wishes to take over development, they are free to fork the project.  
+
+Thanks to everyone who showed interest in **DiabloDungeonTimer**.  
+
+---
+
+
 # DiabloDungeonTimer
 
 Software which automatically tracks and times all dungeons entered in Diablo IV.
